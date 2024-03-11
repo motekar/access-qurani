@@ -11,6 +11,7 @@
 	let preloader1: HTMLAudioElement;
 	let preloader2: HTMLAudioElement;
 	let preloader3: HTMLAudioElement;
+	const beep = new Audio(utils.beepData);
 
 	let currentIndex: Writable<number> = localStore('index', 0);
 
@@ -111,11 +112,11 @@
 		'right,top': actions.prevSura,
 		'top,right': actions.prevSura,
 
-		'left,left': actions.nextJuz,
-		'left,right,left': actions.nextJuz,
+		'left,bottom': actions.nextJuz,
+		'bottom,left': actions.nextJuz,
 
-		'right,right': actions.prevJuz,
-		'right,left,right': actions.prevJuz,
+		'right,bottom': actions.prevJuz,
+		'bottom,right': actions.prevJuz,
 
 		'left,top,bottom': actions.firstSura,
 		'left,bottom,top': actions.firstSura,
@@ -171,7 +172,7 @@
 
 		// Generate string command based on visible sensors
 		cmdStack.push(visibleSensors.join(','));
-		utils.playBeep(50, 1000);
+		beep.play();
 	}
 
 	function preloadAudios() {
@@ -195,7 +196,6 @@
 
 	onMount(() => {
 		resetScroll();
-		// wrap.classList.remove('cloak');
 
 		initSensors();
 
@@ -214,11 +214,16 @@
 </script>
 
 <button on:touchend={onTouchEnd}>
-	<div class="info">Page: {$current.page}<br />Juz: {$current.juz}</div>
+	<div class="info">
+		Surah: {$current.sura}.<br />
+		Ayat: {$current.aya}.<br />
+		Halaman: {$current.page}.<br />
+		Juz: {$current.juz}.
+	</div>
 	<audio preload="auto" bind:this={player} on:ended={actions.nextAya}></audio>
 	<div class="wrap idle" bind:this={wrap}>
 		<div class="scroller" bind:this={scroller}>
-			<div class="circle">{$current.sura}:{$current.aya}</div>
+			<div class="circle"></div>
 			<div class="sensor top"></div>
 			<div class="sensor right"></div>
 			<div class="sensor bottom"></div>
@@ -243,7 +248,7 @@
 		position: fixed;
 		left: 50%;
 		transform: translateX(-50%);
-		top: 30%;
+		top: 20%;
 		z-index: 999;
 		font-size: larger;
 	}
