@@ -6,6 +6,7 @@
 	import { derived, type Writable } from 'svelte/store';
 
 	let wrap: HTMLElement;
+	let liveRegion: HTMLElement;
 	let scroller: HTMLElement;
 	let player: HTMLAudioElement;
 	let preloader1: HTMLAudioElement;
@@ -48,6 +49,11 @@
 
 	let cmdStack: string[] = [];
 
+	function ariaNotify(message: string) {
+		if (isPlaying) return;
+		liveRegion.textContent = message;
+	}
+
 	const actions = {
 		togglePlayer() {
 			// Just change the state, player will play or pause
@@ -64,39 +70,49 @@
 				return;
 			}
 			$currentIndex++;
+			ariaNotify(`Ayat ${$current.aya}, surah ${$current.sura}`);
 		},
 		prevAya() {
 			if ($currentIndex > 0) $currentIndex--;
+			ariaNotify(`Ayat ${$current.aya}, surah ${$current.sura}`);
 		},
 		nextPage() {
 			if ($current.page >= 604) return;
 			$currentIndex = quran.getAyaIndexFromPage($current.page + 1);
+			ariaNotify('Halaman ' + $current.page);
 		},
 		prevPage() {
 			if ($current.page <= 1) return;
 			$currentIndex = quran.getAyaIndexFromPage($current.page - 1);
+			ariaNotify('Halaman ' + $current.page);
 		},
 		nextSura() {
 			if ($current.sura >= 114) return;
 			$currentIndex = quran.getAyaIndexFromSura($current.sura + 1);
+			ariaNotify('Surah ' + $current.sura);
 		},
 		prevSura() {
 			if ($current.sura <= 1) return;
 			$currentIndex = quran.getAyaIndexFromSura($current.sura - 1);
+			ariaNotify('Surah ' + $current.sura);
 		},
 		nextJuz() {
 			if ($current.juz >= 30) return;
 			$currentIndex = quran.getAyaIndexFromJuz($current.juz + 1);
+			ariaNotify('Juz ' + $current.juz);
 		},
 		prevJuz() {
 			if ($current.juz <= 1) return;
 			$currentIndex = quran.getAyaIndexFromJuz($current.juz - 1);
+			ariaNotify('Juz ' + $current.juz);
 		},
 		firstSura() {
 			$currentIndex = 0;
+			ariaNotify('Surah ' + $current.sura);
 		},
 		lastSura() {
 			$currentIndex = quran.getAyaIndexFromSura(114);
+			ariaNotify('Surah ' + $current.sura);
 		}
 	};
 
@@ -232,6 +248,8 @@
 	</div>
 </button>
 
+<div bind:this={liveRegion} class="aria-notify" aria-live="polite"></div>
+
 <style>
 	:global(body),
 	:global(html) {
@@ -315,5 +333,12 @@
 		top: 50%;
 		left: 0;
 		transform: translateY(-50%);
+	}
+	.aria-notify {
+		position: absolute;
+		left: -9999px;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
 	}
 </style>
