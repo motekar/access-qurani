@@ -4,6 +4,7 @@
 	import * as utils from '$lib/utils';
 	import { localStore } from '$lib/localStore';
 	import { derived, type Writable } from 'svelte/store';
+	import { base } from '$app/paths';
 
 	let wrap: HTMLElement;
 	let liveRegion: HTMLElement;
@@ -12,7 +13,7 @@
 	let preloader1: HTMLAudioElement;
 	let preloader2: HTMLAudioElement;
 	let preloader3: HTMLAudioElement;
-	const beep = new Audio(utils.beepData);
+	let beep: HTMLAudioElement;
 
 	let currentIndex: Writable<number> = localStore('index', 0);
 
@@ -215,6 +216,8 @@
 
 		initSensors();
 
+		beep = new Audio(utils.beepData);
+
 		preloader1 = new Audio();
 		preloader1.preload = 'auto';
 		preloader2 = new Audio();
@@ -231,15 +234,17 @@
 
 <button on:touchend={onTouchEnd}>
 	<div class="info">
-		Surah: {$current.sura}.<br />
-		Ayat: {$current.aya}.<br />
-		Halaman: {$current.page}.<br />
-		Juz: {$current.juz}.
+		Surah {$current.sura}.<br />
+		Ayat {$current.aya}.<br />
+		Halaman {$current.page}.<br />
+		Juz {$current.juz}.
 	</div>
 	<audio preload="auto" bind:this={player} on:ended={actions.nextAya}></audio>
 	<div class="wrap idle" bind:this={wrap}>
 		<div class="scroller" bind:this={scroller}>
-			<div class="circle"></div>
+			<div class="circle">
+				<img src="{base}/img/quran.svg" alt="Logo Akses Qurani" />
+			</div>
 			<div class="sensor top"></div>
 			<div class="sensor right"></div>
 			<div class="sensor bottom"></div>
@@ -299,6 +304,9 @@
 		text-align: center;
 		line-height: 100px;
 		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 	.idle .circle {
 		background-color: #f00;
