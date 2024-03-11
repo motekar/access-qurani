@@ -1,1 +1,5 @@
-<h1>Welcome</h1>
+<script>
+	import Player from './Player.svelte';
+</script>
+
+<Player />
