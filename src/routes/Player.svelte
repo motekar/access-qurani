@@ -280,7 +280,7 @@
 		font-size: larger;
 	}
 	.time {
-		top: 60%;
+		top: calc(50% + 100px);
 		font-size: 20px;
 	}
 	.wrap {
