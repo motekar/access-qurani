@@ -10,6 +10,7 @@
 	let liveRegion: HTMLElement;
 	let scroller: HTMLElement;
 	let player: HTMLAudioElement;
+	let playerTime: number;
 	let preloader1: HTMLAudioElement;
 	let preloader2: HTMLAudioElement;
 	let preloader3: HTMLAudioElement;
@@ -239,11 +240,13 @@
 		Halaman {$current.page}.<br />
 		Juz {$current.juz}.
 	</div>
-	<audio preload="auto" bind:this={player} on:ended={actions.nextAya}></audio>
+	<audio preload="auto" bind:this={player} on:ended={actions.nextAya} bind:currentTime={playerTime}
+	></audio>
+	<div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
 	<div class="wrap idle" bind:this={wrap}>
 		<div class="scroller" bind:this={scroller}>
 			<div class="circle">
-				<img src="{base}/img/quran.svg" alt="Logo Akses Qurani" />
+				<img src="{base}/img/access-quran.png" width="100" height="100" alt="Logo Akses Qurani" />
 			</div>
 			<div class="sensor top"></div>
 			<div class="sensor right"></div>
@@ -267,13 +270,18 @@
 		border: none;
 		padding: 0;
 	}
-	.info {
+	.info,
+	.time {
 		position: fixed;
 		left: 50%;
 		transform: translateX(-50%);
 		top: 20%;
 		z-index: 999;
 		font-size: larger;
+	}
+	.time {
+		top: 60%;
+		font-size: 20px;
 	}
 	.wrap {
 		width: 100vw;
@@ -307,6 +315,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		overflow: hidden;
 	}
 	.idle .circle {
 		background-color: #f00;
