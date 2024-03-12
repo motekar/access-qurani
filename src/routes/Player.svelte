@@ -29,6 +29,12 @@
 		};
 	});
 
+	const pageTitle = derived(
+		current,
+		($current) =>
+			`Surah ${$current.sura} Ayat ${$current.aya} - Halaman ${$current.page} - Akses Qurani`
+	);
+
 	let isPlaying: boolean = false;
 
 	// This reactive statement will triggered on change to
@@ -63,7 +69,12 @@
 			isPlaying = !isPlaying;
 
 			if (isPlaying) utils.requestWakeLock();
-			else utils.releaseWakeLock();
+			else {
+				utils.releaseWakeLock();
+				ariaNotify(
+					`Surah ${$current.sura}, ayat ${$current.aya}, Halaman ${$current.page}, juz ${$current.juz}`
+				);
+			}
 		},
 		nextAya() {
 			// Reach end of annaas
@@ -232,6 +243,10 @@
 		preloadAudios();
 	});
 </script>
+
+<svelte:head>
+	<title>{$pageTitle}</title>
+</svelte:head>
 
 <button on:touchend={onTouchEnd}>
 	<div class="info">
