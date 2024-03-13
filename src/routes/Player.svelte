@@ -4,17 +4,17 @@
 	import * as utils from '$lib/utils';
 	import { localStore } from '$lib/localStore';
 	import { derived, type Writable } from 'svelte/store';
-	import { base } from '$app/paths';
+	import Joystick from '$lib/components/Joystick.svelte';
+	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
 
-	let wrap: HTMLElement;
-	let liveRegion: HTMLElement;
-	let scroller: HTMLElement;
+	let control: Joystick;
+	let notifier: AriaNotifier;
+
 	let player: HTMLAudioElement;
 	let playerTime: number;
 	let preloader1: HTMLAudioElement;
 	let preloader2: HTMLAudioElement;
 	let preloader3: HTMLAudioElement;
-	let beep: HTMLAudioElement;
 
 	let currentIndex: Writable<number> = localStore('index', 0);
 
@@ -48,18 +48,16 @@
 			player.play();
 
 			preloadAudios();
-			wrap.classList.remove('idle');
+			control.removeClass('idle');
 		} else {
 			player && player.pause();
-			wrap && wrap.classList.add('idle');
+			control && control.addClass('idle');
 		}
 	}
 
-	let cmdStack: string[] = [];
-
 	function ariaNotify(message: string) {
 		if (isPlaying) return;
-		liveRegion.textContent = message;
+		notifier.notify(message);
 	}
 
 	const actions = {
@@ -154,54 +152,11 @@
 		'right,bottom,top': actions.lastSura
 	};
 
-	function resetScroll() {
-		wrap.style.overflow = 'hidden';
-
-		wrap.scrollLeft = (scroller.offsetWidth - wrap.offsetWidth) / 2;
-		wrap.scrollTop = (scroller.offsetHeight - wrap.offsetHeight) / 2;
-
-		setTimeout(() => {
-			wrap.style.overflow = 'scroll';
-		}, 100);
-	}
-
-	function onTouchEnd() {
-		resetScroll();
-		handleCommand(cmdStack);
-		cmdStack = [];
-	}
-
-	function handleCommand(command: string[]) {
-		if (command.length == 0) return actions.togglePlayer();
-
+	function handleCommand(event: CustomEvent) {
+		const command = event.detail as string[];
 		const commandStr = command.join(',');
-		console.log(commandStr);
 		const action = commandActions[commandStr as keyof typeof commandActions];
 		if (action) action();
-	}
-
-	function initSensors() {
-		const observer = new IntersectionObserver(onSensorsTriggered, {
-			root: wrap,
-			threshold: 0.3 // Trigger when 30% of the element is out of view
-		});
-		wrap.querySelectorAll('.sensor').forEach((sensor) => observer.observe(sensor));
-	}
-
-	function onSensorsTriggered(entries: IntersectionObserverEntry[]) {
-		const visibleSensors: string[] = [];
-
-		entries.forEach((entry) => {
-			if (entry.isIntersecting) {
-				visibleSensors.push(entry.target.classList[1]); // Extract class name
-			}
-		});
-
-		if (!visibleSensors.length) return;
-
-		// Generate string command based on visible sensors
-		cmdStack.push(visibleSensors.join(','));
-		beep.play();
 	}
 
 	function preloadAudios() {
@@ -224,12 +179,6 @@
 	}
 
 	onMount(() => {
-		resetScroll();
-
-		initSensors();
-
-		beep = new Audio(utils.beepData);
-
 		preloader1 = new Audio();
 		preloader1.preload = 'auto';
 		preloader2 = new Audio();
@@ -248,30 +197,18 @@
 	<title>{$pageTitle}</title>
 </svelte:head>
 
-<button on:touchend={onTouchEnd}>
-	<div class="info">
-		Surah {$current.sura}.<br />
-		Ayat {$current.aya}.<br />
-		Halaman {$current.page}.<br />
-		Juz {$current.juz}.
-	</div>
-	<audio preload="auto" bind:this={player} on:ended={actions.nextAya} bind:currentTime={playerTime}
-	></audio>
-	<div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
-	<div class="wrap idle" bind:this={wrap}>
-		<div class="scroller" bind:this={scroller}>
-			<div class="circle">
-				<img src="{base}/img/access-quran.png" width="100" height="100" alt="Logo Akses Qurani" />
-			</div>
-			<div class="sensor top"></div>
-			<div class="sensor right"></div>
-			<div class="sensor bottom"></div>
-			<div class="sensor left"></div>
-		</div>
-	</div>
-</button>
+<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer} />
+<AriaNotifier bind:this={notifier} />
 
-<div bind:this={liveRegion} class="aria-notify" aria-live="polite"></div>
+<div class="info">
+	Surah {$current.sura}.<br />
+	Ayat {$current.aya}.<br />
+	Halaman {$current.page}.<br />
+	Juz {$current.juz}.
+</div>
+<audio preload="auto" bind:this={player} on:ended={actions.nextAya} bind:currentTime={playerTime}
+></audio>
+<div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
 
 <style>
 	:global(body),
@@ -297,80 +234,5 @@
 	.time {
 		top: calc(50% + 100px);
 		font-size: 20px;
-	}
-	.wrap {
-		width: 100vw;
-		height: 100vh;
-		background-color: #ddd;
-		position: relative;
-		overflow: scroll;
-	}
-
-	.scroller {
-		width: calc(100vw + 200px);
-		height: calc(100vh + 200px);
-		position: absolute;
-	}
-
-	.circle {
-		width: 100px;
-		height: 100px;
-		background-color: #607c3c;
-		color: #fff;
-		font-size: 30px;
-		font-weight: bold;
-		border-radius: 50%;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		text-align: center;
-		line-height: 100px;
-		cursor: pointer;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
-	}
-	.idle .circle {
-		background-color: #f00;
-	}
-
-	.sensor {
-		width: 100px;
-		height: 100px;
-		position: absolute;
-		background-color: transparent;
-	}
-
-	.top {
-		top: 0;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
-	.right {
-		top: 50%;
-		right: 0;
-		transform: translateY(-50%);
-	}
-
-	.bottom {
-		bottom: 0;
-		left: 50%;
-		transform: translateX(-50%);
-	}
-
-	.left {
-		top: 50%;
-		left: 0;
-		transform: translateY(-50%);
-	}
-	.aria-notify {
-		position: absolute;
-		left: -9999px;
-		width: 1px;
-		height: 1px;
-		overflow: hidden;
 	}
 </style>
