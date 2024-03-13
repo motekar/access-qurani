@@ -1,0 +1,1 @@
+import{i as n,s as r,c as e,a as i,b as m}from"../chunks/disclose-version.CP2-uZI_.js";import{p as f,a as l}from"../chunks/runtime.D3Yseq_V.js";function u(a,o){l(o,!1),n();var s=m(a),t=i(s);r(t,o.children,{},null),e(a,s),f()}export{u as component};

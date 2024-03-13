@@ -6,15 +6,13 @@
 	import { derived, type Writable } from 'svelte/store';
 	import Joystick from '$lib/components/Joystick.svelte';
 	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
+	import Player from '$lib/components/Player.svelte';
 
 	let control: Joystick;
 	let notifier: AriaNotifier;
+	let player: Player;
 
-	let player: HTMLAudioElement;
 	let playerTime: number;
-	let preloader1: HTMLAudioElement;
-	let preloader2: HTMLAudioElement;
-	let preloader3: HTMLAudioElement;
 
 	let currentIndex: Writable<number> = localStore('index', 0);
 
@@ -42,12 +40,11 @@
 	$: {
 		if (isPlaying) {
 			if (player.src != $current.url) {
-				player.src = $current.url;
-				player.load();
+				player.load($current.url);
 			}
 			player.play();
 
-			preloadAudios();
+			player.preload();
 			control.removeClass('idle');
 		} else {
 			player && player.pause();
@@ -159,37 +156,9 @@
 		if (action) action();
 	}
 
-	function preloadAudios() {
-		if ($currentIndex < quran.data.ayaIndex.length - 1) {
-			preloader1.src = quran.getAudioUrl($currentIndex + 1);
-			preloader1.load();
-		}
-
-		// preload next page
-		if ($current.page < 604) {
-			preloader2.src = quran.getAudioUrl(quran.getAyaIndexFromPage($current.page + 1));
-			preloader2.load();
-		}
-
-		// preload next sura
-		if ($current.sura < 114) {
-			preloader3.src = quran.getAudioUrl(quran.getAyaIndexFromPage($current.sura + 1));
-			preloader3.load();
-		}
-	}
-
 	onMount(() => {
-		preloader1 = new Audio();
-		preloader1.preload = 'auto';
-		preloader2 = new Audio();
-		preloader2.preload = 'auto';
-		preloader3 = new Audio();
-		preloader3.preload = 'auto';
-
-		player.src = quran.getAudioUrl($currentIndex);
-		player.load();
-
-		preloadAudios();
+		player.load(quran.getAudioUrl($currentIndex));
+		player.preload();
 	});
 </script>
 
@@ -206,9 +175,15 @@
 	Halaman {$current.page}.<br />
 	Juz {$current.juz}.
 </div>
-<audio preload="auto" bind:this={player} on:ended={actions.nextAya} bind:currentTime={playerTime}
-></audio>
+
 <div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
+
+<Player
+	bind:this={player}
+	on:ended={actions.nextAya}
+	bind:currentTime={playerTime}
+	bind:currentIndex={$currentIndex}
+/>
 
 <style>
 	:global(body),
