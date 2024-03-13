@@ -1,5 +1,5 @@
 <script>
-	import Player from './Player.svelte';
+	import App from './App.svelte';
 </script>
 
-<Player />
+<App />
