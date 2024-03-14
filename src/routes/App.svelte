@@ -22,6 +22,7 @@
 			juz: quran.getJuzFromIndex($currentIndex),
 			page: quran.getPageFromIndex($currentIndex),
 			sura: sura + 1,
+			suraName: quran.getSuraData(sura + 1).name,
 			aya: aya + 1,
 			url: quran.getAudioUrl($currentIndex)
 		};
@@ -29,8 +30,7 @@
 
 	const pageTitle = derived(
 		current,
-		($current) =>
-			`Surah ${$current.sura} Ayat ${$current.aya} - Halaman ${$current.page} - Akses Qurani`
+		($current) => `Surah ${$current.sura} ${$current.suraName} Ayat ${$current.aya} - Akses Qurani`
 	);
 
 	let isPlaying: boolean = false;
@@ -67,7 +67,7 @@
 			else {
 				utils.releaseWakeLock();
 				ariaNotify(
-					`Surah ${$current.sura}, ayat ${$current.aya}, Halaman ${$current.page}, juz ${$current.juz}`
+					`Surah ${$current.sura} ${$current.suraName}, ayat ${$current.aya}, Halaman ${$current.page}, juz ${$current.juz}`
 				);
 			}
 		},
@@ -78,41 +78,49 @@
 				return;
 			}
 			$currentIndex++;
-			ariaNotify(`Ayat ${$current.aya}, surah ${$current.sura}`);
+			ariaNotify(`Ayat ${$current.aya}, surah ${$current.sura} ${$current.suraName}`);
 		},
 		prevAya() {
 			if ($currentIndex > 0) $currentIndex--;
-			ariaNotify(`Ayat ${$current.aya}, surah ${$current.sura}`);
+			ariaNotify(`Ayat ${$current.aya}, surah ${$current.sura} ${$current.suraName}`);
 		},
 		nextPage() {
 			if ($current.page >= 604) return;
 			$currentIndex = quran.getAyaIndexFromPage($current.page + 1);
-			ariaNotify('Halaman ' + $current.page);
+			ariaNotify(
+				`Halaman ${$current.page} Surah ${$current.sura} ${$current.suraName} ayat ${$current.aya}`
+			);
 		},
 		prevPage() {
 			if ($current.page <= 1) return;
 			$currentIndex = quran.getAyaIndexFromPage($current.page - 1);
-			ariaNotify('Halaman ' + $current.page);
+			ariaNotify(
+				`Halaman ${$current.page} Surah ${$current.sura} ${$current.suraName} ayat ${$current.aya}`
+			);
 		},
 		nextSura() {
 			if ($current.sura >= 114) return;
 			$currentIndex = quran.getAyaIndexFromSura($current.sura + 1);
-			ariaNotify('Surah ' + $current.sura);
+			ariaNotify(`Surah ${$current.sura} ${$current.suraName}`);
 		},
 		prevSura() {
 			if ($current.sura <= 1) return;
 			$currentIndex = quran.getAyaIndexFromSura($current.sura - 1);
-			ariaNotify('Surah ' + $current.sura);
+			ariaNotify(`Surah ${$current.sura} ${$current.suraName}`);
 		},
 		nextJuz() {
 			if ($current.juz >= 30) return;
 			$currentIndex = quran.getAyaIndexFromJuz($current.juz + 1);
-			ariaNotify('Juz ' + $current.juz);
+			ariaNotify(
+				`Juz ${$current.juz} Surah ${$current.sura} ${$current.suraName} ayat ${$current.aya}`
+			);
 		},
 		prevJuz() {
 			if ($current.juz <= 1) return;
 			$currentIndex = quran.getAyaIndexFromJuz($current.juz - 1);
-			ariaNotify('Juz ' + $current.juz);
+			ariaNotify(
+				`Juz ${$current.juz} Surah ${$current.sura} ${$current.suraName} ayat ${$current.aya}`
+			);
 		},
 		firstSura() {
 			$currentIndex = 0;
