@@ -4,7 +4,6 @@
 
 	export let currentIndex: number = 0;
 	export let currentTime: number = 0;
-	export let src: string = '';
 
 	const dispatch = createEventDispatcher();
 
@@ -14,9 +13,16 @@
 	let preloader3: HTMLAudioElement;
 
 	export function load(url: string) {
-		src = url;
 		audioElement.src = url;
 		audioElement.load();
+	}
+
+	export function current() {
+		return {
+			url: audioElement.src,
+			index: currentIndex,
+			time: currentTime
+		};
 	}
 
 	export function play() {

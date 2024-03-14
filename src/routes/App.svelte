@@ -39,7 +39,7 @@
 	// isPlaying and currentIndex
 	$: {
 		if (isPlaying) {
-			if (player.src != $current.url) {
+			if (player.current().url != $current.url) {
 				player.load($current.url);
 			}
 			player.play();
