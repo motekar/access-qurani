@@ -6,7 +6,7 @@
 	}
 </script>
 
-<div aria-live="polite" bind:this={element}></div>
+<div aria-live="assertive" bind:this={element}></div>
 
 <style>
 	div {

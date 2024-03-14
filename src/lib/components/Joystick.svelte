@@ -87,6 +87,10 @@
 </button>
 
 <style>
+	button {
+		border: none;
+		padding: 0;
+	}
 	.wrap {
 		width: 100vw;
 		height: 100vh;
