@@ -30,6 +30,10 @@
 	}
 
 	function initSensors() {
+		scroller.style.transform = 'initial';
+		scroller.style.top = 'initial';
+		scroller.style.left = 'initial';
+
 		const observer = new IntersectionObserver(onSensorsTriggered, {
 			root: wrap,
 			threshold: 0.3 // Trigger when 30% of the element is out of view
@@ -103,6 +107,9 @@
 		width: calc(100vw + 200px);
 		height: calc(100vh + 200px);
 		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
 	}
 
 	.circle {
