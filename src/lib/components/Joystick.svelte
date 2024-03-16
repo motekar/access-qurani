@@ -67,6 +67,26 @@
 		cmdStack = [];
 	}
 
+	function onKeydown(ev: KeyboardEvent) {
+		const keySensorMap = {
+			ArrowUp: 'bottom',
+			ArrowRight: 'left',
+			ArrowDown: 'top',
+			ArrowLeft: 'right'
+		};
+		const keyCommand = keySensorMap[ev.code as keyof typeof keySensorMap];
+		if (keyCommand) {
+			ev.preventDefault();
+			cmdStack.push(keyCommand);
+			beep.play();
+		}
+	}
+
+	function onKeyup() {
+		dispatch('touchend', cmdStack);
+		cmdStack = [];
+	}
+
 	onMount(() => {
 		resetScroll();
 
@@ -75,6 +95,8 @@
 		beep = new Audio(utils.beepData);
 	});
 </script>
+
+<svelte:window on:keydown={onKeydown} on:keyup={onKeyup} />
 
 <button on:touchend={onTouchEnd} on:click={onClick}>
 	<div class="wrap idle" bind:this={wrap}>

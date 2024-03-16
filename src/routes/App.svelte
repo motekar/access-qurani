@@ -167,22 +167,7 @@
 	}
 
 	function onKeyup(ev: KeyboardEvent) {
-		const keyMap = {
-			Space: actions.togglePlayer,
-			ArrowUp: actions.prevAya,
-			ArrowDown: actions.nextAya,
-			ArrowRight: actions.nextPage,
-			ArrowLeft: actions.prevPage
-		};
-		const action = keyMap[ev.code as keyof typeof keyMap];
-		if (action) {
-			ev.preventDefault();
-			action();
-		}
-	}
-
-	function onKeydown(ev: KeyboardEvent) {
-		// TODO: key combination
+		if (ev.code == 'Space') actions.togglePlayer();
 	}
 
 	onMount(() => {
@@ -195,7 +180,7 @@
 	<title>{$pageTitle}</title>
 </svelte:head>
 
-<svelte:window on:keydown={onKeydown} on:keyup={onKeyup} />
+<svelte:window on:keyup={onKeyup} />
 
 <Info />
 
