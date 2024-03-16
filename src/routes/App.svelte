@@ -5,6 +5,7 @@
 	import * as utils from '$lib/utils';
 	import { localStore } from '$lib/localStore';
 	import { derived, type Writable } from 'svelte/store';
+	import { page } from '$app/stores';
 	import Joystick from '$lib/components/Joystick.svelte';
 	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
 	import Player from '$lib/components/Player.svelte';
@@ -35,7 +36,6 @@
 	);
 
 	let isPlaying: boolean = false;
-	let openInfo: boolean = false;
 
 	// This reactive statement will triggered on change to
 	// isPlaying and currentIndex
@@ -167,7 +167,6 @@
 	}
 
 	function onKeyup(ev: KeyboardEvent) {
-		console.log(ev);
 		const keyMap = {
 			Space: actions.togglePlayer,
 			ArrowUp: actions.prevAya,
@@ -198,9 +197,9 @@
 
 <svelte:window on:keydown={onKeydown} on:keyup={onKeyup} />
 
-<Info bind:open={openInfo} />
+<Info />
 
-<div aria-hidden={openInfo}>
+<div aria-hidden={$page.state.showInfo}>
 	<div class="status" aria-hidden="true">
 		Surah {$current.sura}
 		{$current.suraName}.<br />
