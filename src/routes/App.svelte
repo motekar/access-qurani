@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Info from './Info.svelte';
 	import { onMount } from 'svelte';
 	import * as quran from '$lib/quranData';
 	import * as utils from '$lib/utils';
@@ -34,6 +35,7 @@
 	);
 
 	let isPlaying: boolean = false;
+	let openInfo: boolean = false;
 
 	// This reactive statement will triggered on change to
 	// isPlaying and currentIndex
@@ -174,14 +176,18 @@
 	<title>{$pageTitle}</title>
 </svelte:head>
 
-<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer} />
-<AriaNotifier bind:this={notifier} />
+<Info bind:open={openInfo} />
 
-<div class="info">
-	Surah {$current.sura}.<br />
-	Ayat {$current.aya}.<br />
-	Halaman {$current.page}.<br />
-	Juz {$current.juz}.
+<div aria-hidden={openInfo}>
+	<div class="status" aria-hidden="true">
+		Surah {$current.sura}
+		{$current.suraName}.<br />
+		Ayat {$current.aya}.<br />
+		Halaman {$current.page}.<br />
+		Juz {$current.juz}.
+	</div>
+
+	<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer} />
 </div>
 
 <div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
@@ -193,19 +199,10 @@
 	bind:currentIndex={$currentIndex}
 />
 
-<style>
-	:global(body),
-	:global(html) {
-		margin: 0;
-		padding: 0;
-		height: 100%;
-	}
+<AriaNotifier bind:this={notifier} />
 
-	button {
-		border: none;
-		padding: 0;
-	}
-	.info,
+<style>
+	.status,
 	.time {
 		position: fixed;
 		left: 50%;
