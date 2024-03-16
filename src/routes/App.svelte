@@ -166,6 +166,26 @@
 		if (action) action();
 	}
 
+	function onKeyup(ev: KeyboardEvent) {
+		console.log(ev);
+		const keyMap = {
+			Space: actions.togglePlayer,
+			ArrowUp: actions.prevAya,
+			ArrowDown: actions.nextAya,
+			ArrowRight: actions.nextPage,
+			ArrowLeft: actions.prevPage
+		};
+		const action = keyMap[ev.code as keyof typeof keyMap];
+		if (action) {
+			ev.preventDefault();
+			action();
+		}
+	}
+
+	function onKeydown(ev: KeyboardEvent) {
+		// TODO: key combination
+	}
+
 	onMount(() => {
 		player.load(quran.getAudioUrl($currentIndex));
 		player.preload();
@@ -175,6 +195,8 @@
 <svelte:head>
 	<title>{$pageTitle}</title>
 </svelte:head>
+
+<svelte:window on:keydown={onKeydown} on:keyup={onKeyup} />
 
 <Info bind:open={openInfo} />
 
