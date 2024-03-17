@@ -6,28 +6,34 @@
 		<link rel="icon" href="/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		
-		<link rel="modulepreload" href="/_app/immutable/entry/start.BNTHK2f5.js">
-		<link rel="modulepreload" href="/_app/immutable/chunks/entry.CR4mnsIw.js">
+		<link rel="modulepreload" href="/_app/immutable/entry/start.rGg0Hv62.js">
+		<link rel="modulepreload" href="/_app/immutable/chunks/entry.Bc2A4NoJ.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/scheduler.hUGlD-fh.js">
-		<link rel="modulepreload" href="/_app/immutable/entry/app.DgvlYjux.js">
+		<link rel="modulepreload" href="/_app/immutable/entry/app.Dtz6la9Q.js">
 		<link rel="modulepreload" href="/_app/immutable/chunks/index.1RmtpcWw.js">
 	</head>
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">
 			<script>
 				{
-					__sveltekit_sq1zgb = {
+					__sveltekit_15sc4rd = {
 						base: ""
 					};
 
 					const element = document.currentScript.parentElement;
 
 					Promise.all([
-						import("/_app/immutable/entry/start.BNTHK2f5.js"),
-						import("/_app/immutable/entry/app.DgvlYjux.js")
+						import("/_app/immutable/entry/start.rGg0Hv62.js"),
+						import("/_app/immutable/entry/app.Dtz6la9Q.js")
 					]).then(([kit, app]) => {
 						kit.start(app, element);
 					});
+
+					if ('serviceWorker' in navigator) {
+						addEventListener('load', function () {
+							navigator.serviceWorker.register('/service-worker.js');
+						});
+					}
 				}
 			</script>
 		</div>
