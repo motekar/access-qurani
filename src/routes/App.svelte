@@ -46,7 +46,6 @@
 			}
 			player.play();
 
-			player.preload();
 			control.removeClass('idle');
 		} else {
 			player && player.pause();
@@ -172,7 +171,6 @@
 
 	onMount(() => {
 		player.load(quran.getAudioUrl($currentIndex));
-		player.preload();
 	});
 </script>
 
