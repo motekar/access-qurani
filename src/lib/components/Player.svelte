@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount, tick } from 'svelte';
-	import * as quran from '$lib/quranData';
+	import { data, getAudioUrl, getAyaIndexFromPage, getAyaIndexFromSura } from '$lib/quranData';
+	import { currentIndex, current as currentState } from '$lib/globalState';
 
-	export let currentIndex: number = 0;
 	export let currentTime: number = 0;
 
 	const dispatch = createEventDispatcher();
@@ -21,7 +21,6 @@
 	export function current() {
 		return {
 			url: audioElement.src,
-			index: currentIndex,
 			time: currentTime
 		};
 	}
@@ -37,8 +36,8 @@
 	}
 
 	export function preload() {
-		if (currentIndex < quran.data.ayaIndex.length - 1) {
-			const nextAya = quran.getAudioUrl(currentIndex + 1);
+		if ($currentIndex < data.ayaIndex.length - 1) {
+			const nextAya = getAudioUrl($currentIndex + 1);
 			if (preloader1.src != nextAya) {
 				preloader1.src = nextAya;
 				preloader1.load();
@@ -46,9 +45,8 @@
 		}
 
 		// preload next page
-		const currentPage = quran.getPageFromIndex(currentIndex);
-		if (currentPage < 604) {
-			const nextPageAya = quran.getAudioUrl(quran.getAyaIndexFromPage(currentPage + 1));
+		if ($currentState.page < 604) {
+			const nextPageAya = getAudioUrl(getAyaIndexFromPage($currentState.page + 1));
 			if (preloader2.src != nextPageAya) {
 				preloader2.src = nextPageAya;
 				preloader2.load();
@@ -56,9 +54,8 @@
 		}
 
 		// preload next sura
-		const [suraIdx] = quran.data.ayaIndex[currentIndex];
-		if (suraIdx < 113) {
-			const nextSuraAya = quran.getAudioUrl(quran.getAyaIndexFromSura(suraIdx + 2));
+		if ($currentState.sura < 114) {
+			const nextSuraAya = getAudioUrl(getAyaIndexFromSura($currentState.sura + 1));
 			if (preloader3.src != nextSuraAya) {
 				preloader3.src = nextSuraAya;
 				preloader3.load();

@@ -3,9 +3,9 @@
 	import { onMount } from 'svelte';
 	import * as quran from '$lib/quranData';
 	import * as utils from '$lib/utils';
-	import { localStore } from '$lib/localStore';
-	import { derived, type Writable } from 'svelte/store';
+	import { derived } from 'svelte/store';
 	import { page } from '$app/stores';
+	import { currentIndex, current } from '$lib/globalState';
 	import Joystick from '$lib/components/Joystick.svelte';
 	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
 	import Player from '$lib/components/Player.svelte';
@@ -13,22 +13,7 @@
 	let control: Joystick;
 	let notifier: AriaNotifier;
 	let player: Player;
-
 	let playerTime: number;
-
-	let currentIndex: Writable<number> = localStore('index', 0);
-
-	const current = derived(currentIndex, ($currentIndex) => {
-		const [sura, aya] = quran.data.ayaIndex[$currentIndex];
-		return {
-			juz: quran.getJuzFromIndex($currentIndex),
-			page: quran.getPageFromIndex($currentIndex),
-			sura: sura + 1,
-			suraName: quran.getSuraData(sura + 1).name,
-			aya: aya + 1,
-			url: quran.getAudioUrl($currentIndex)
-		};
-	});
 
 	const pageTitle = derived(
 		current,
@@ -196,12 +181,7 @@
 
 <div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
 
-<Player
-	bind:this={player}
-	on:ended={actions.nextAya}
-	bind:currentTime={playerTime}
-	bind:currentIndex={$currentIndex}
-/>
+<Player bind:this={player} on:ended={actions.nextAya} bind:currentTime={playerTime} />
 
 <AriaNotifier bind:this={notifier} />
 
