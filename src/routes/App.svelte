@@ -14,11 +14,19 @@
 	let notifier: AriaNotifier;
 	let player: Player;
 	let playerTime: number;
+	let pageFlipAudio: HTMLAudioElement;
 
 	const pageTitle = derived(
 		current,
 		($current) => `Surah ${$current.sura} ${$current.suraName} Ayat ${$current.aya} - Akses Qurani`
 	);
+
+	// detect page change and play sound effect
+	let lastPage: number = 1;
+	$: if ($current.page != lastPage) {
+		if (pageFlipAudio) playPageFlipSound();
+		lastPage = $current.page;
+	}
 
 	let isPlaying: boolean = false;
 
@@ -154,8 +162,13 @@
 		if (ev.code == 'Space') actions.togglePlayer();
 	}
 
+	function playPageFlipSound() {
+		pageFlipAudio.currentTime = 0;
+		pageFlipAudio.play();
+	}
 	onMount(() => {
 		player.load(quran.getAudioUrl($currentIndex));
+		pageFlipAudio = new Audio(base + 'audio/pageflip.mp3');
 	});
 </script>
 
