@@ -1,9 +1,7 @@
-import { build, files, prerendered, version } from '$service-worker';
-import { precacheAndRoute } from 'workbox-precaching';
+self.addEventListener('install', () => {
+  console.log('sw install')
+});
 
-const precacheList = ['/', ...build, ...files, ...prerendered].map((file) => ({
-	url: file,
-	revision: version
-}));
-
-precacheAndRoute(precacheList);
+self.addEventListener('activate', () => {
+  console.log('sw activate')
+});
