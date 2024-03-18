@@ -9,12 +9,14 @@
 	import Joystick from '$lib/components/Joystick.svelte';
 	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
 	import Player from '$lib/components/Player.svelte';
+	import { base } from '$app/paths';
 
 	let control: Joystick;
 	let notifier: AriaNotifier;
 	let player: Player;
 	let playerTime: number;
 	let pageFlipAudio: HTMLAudioElement;
+	let pageFlipAudio2: HTMLAudioElement;
 
 	const pageTitle = derived(
 		current,
@@ -24,7 +26,7 @@
 	// detect page change and play sound effect
 	let lastPage: number = 1;
 	$: if ($current.page != lastPage) {
-		if (pageFlipAudio) playPageFlipSound();
+		if (pageFlipAudio) playPageFlipSound(Math.abs($current.page - lastPage) > 1);
 		lastPage = $current.page;
 	}
 
@@ -162,13 +164,20 @@
 		if (ev.code == 'Space') actions.togglePlayer();
 	}
 
-	function playPageFlipSound() {
-		pageFlipAudio.currentTime = 0;
-		pageFlipAudio.play();
+	function playPageFlipSound(multi: boolean) {
+		if (!multi) {
+			pageFlipAudio.currentTime = 0;
+			pageFlipAudio.play();
+		} else {
+			pageFlipAudio2.currentTime = 0;
+			pageFlipAudio2.play();
+		}
 	}
+
 	onMount(() => {
 		player.load(quran.getAudioUrl($currentIndex));
 		pageFlipAudio = new Audio(base + 'audio/pageflip.mp3');
+		pageFlipAudio2 = new Audio(base + 'audio/pageflip-multi.mp3');
 	});
 </script>
 
