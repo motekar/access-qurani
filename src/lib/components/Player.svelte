@@ -102,3 +102,18 @@
 </script>
 
 <audio preload="auto" bind:this={audioElement} on:ended={onEnded} bind:currentTime></audio>
+
+<div class="time" aria-hidden="true">{formatTime(currentTime)}</div>
+
+<style>
+	.time {
+		position: fixed;
+		left: 50%;
+		transform: translateX(-50%);
+		top: 20%;
+		z-index: 999;
+		font-size: larger;
+		top: calc(50% + 100px);
+		font-size: 20px;
+	}
+</style>

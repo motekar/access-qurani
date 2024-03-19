@@ -14,7 +14,7 @@
 	let control: Joystick;
 	let notifier: AriaNotifier;
 	let player: Player;
-	let playerTime: number;
+	let isInstalled: boolean;
 	let pageFlipAudio: HTMLAudioElement;
 	let pageFlipAudio2: HTMLAudioElement;
 
@@ -202,24 +202,17 @@
 	<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer} />
 </div>
 
-<div class="time" aria-hidden="true">{utils.formatTime(playerTime)}</div>
-
-<Player bind:this={player} on:ended={actions.nextAya} bind:currentTime={playerTime} />
+<Player bind:this={player} on:ended={actions.nextAya} />
 
 <AriaNotifier bind:this={notifier} />
 
 <style>
-	.status,
-	.time {
+	.status {
 		position: fixed;
 		left: 50%;
 		transform: translateX(-50%);
 		top: 20%;
 		z-index: 999;
 		font-size: larger;
-	}
-	.time {
-		top: calc(50% + 100px);
-		font-size: 20px;
 	}
 </style>
