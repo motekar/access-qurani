@@ -69,15 +69,16 @@
 
 	function onKeydown(ev: KeyboardEvent) {
 		const keySensorMap = {
-			ArrowUp: 'bottom',
-			ArrowRight: 'left',
-			ArrowDown: 'top',
-			ArrowLeft: 'right'
+			ArrowUp: 'top',
+			ArrowRight: 'right',
+			ArrowDown: 'bottom',
+			ArrowLeft: 'left'
 		};
 		const keyCommand = keySensorMap[ev.code as keyof typeof keySensorMap];
 		if (keyCommand) {
 			ev.preventDefault();
 			cmdStack.push(keyCommand);
+			beep.currentTime = 0;
 			beep.play();
 		}
 	}
