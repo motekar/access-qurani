@@ -177,6 +177,7 @@
 
 	onMount(() => {
 		player.load(quran.getAudioUrl($currentIndex));
+		isInstalled = window.matchMedia('(display-mode: standalone)').matches;
 		pageFlipAudio = new Audio(base + 'audio/pageflip.mp3');
 		pageFlipAudio2 = new Audio(base + 'audio/pageflip-multi.mp3');
 	});

@@ -8,6 +8,7 @@
 		getBasmalaUrl,
 		needBasmala
 	} from '$lib/quranData';
+	import { formatTime } from '$lib/utils';
 	import { currentIndex, current as currentState } from '$lib/globalState';
 
 	export let currentTime: number = 0;
@@ -19,9 +20,12 @@
 	let preloader2: HTMLAudioElement;
 	let preloader3: HTMLAudioElement;
 	let playingBasmala: number = 0;
+	let isPlaying: boolean = false;
 
 	export function load(url: string) {
 		let audioUrl = url;
+		// Fix first time play on first aya
+		if (!isPlaying) playingBasmala = 0;
 		if (url.match(/001\./) && playingBasmala != $currentState.sura && needBasmala($currentIndex)) {
 			audioUrl = getBasmalaUrl($currentState.sura);
 			playingBasmala = $currentState.sura;
@@ -43,11 +47,13 @@
 
 	export function play() {
 		audioElement.play();
+		isPlaying = true;
 		preload();
 	}
 
 	export function pause() {
 		audioElement.pause();
+		isPlaying = false;
 	}
 
 	async function preload() {
