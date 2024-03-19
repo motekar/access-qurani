@@ -392,10 +392,22 @@ function getAudioUrl(idx) {
 	// return `https://everyayah.com/data/Maher_AlMuaiqly_64kbps/${filename}`;
 }
 
+/**
+ *
+ * @param {number} sura
+ * @returns {string}
+ */
+function getBasmalaUrl(sura) {
+	const suraStr = sura.toString().padStart(3, '0');
+	const filename = `${suraStr}000.mp3`;
+	return `https://tanzil.net/res/audio/afasy/${filename}`;
+}
+
 export {
 	data,
 	needBasmala,
 	getAudioUrl,
+	getBasmalaUrl,
 	getAyaIndexFromJuz,
 	getAyaIndexFromPage,
 	getAyaIndexFromSura,

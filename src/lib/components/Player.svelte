@@ -1,6 +1,13 @@
 <script lang="ts">
 	import { createEventDispatcher, onMount, tick } from 'svelte';
-	import { data, getAudioUrl, getAyaIndexFromPage, getAyaIndexFromSura } from '$lib/quranData';
+	import {
+		data,
+		getAudioUrl,
+		getAyaIndexFromPage,
+		getAyaIndexFromSura,
+		getBasmalaUrl,
+		needBasmala
+	} from '$lib/quranData';
 	import { currentIndex, current as currentState } from '$lib/globalState';
 
 	export let currentTime: number = 0;
@@ -11,11 +18,20 @@
 	let preloader1: HTMLAudioElement;
 	let preloader2: HTMLAudioElement;
 	let preloader3: HTMLAudioElement;
+	let playingBasmala: number = 0;
 
 	export function load(url: string) {
-		audioElement.src = url;
+		let audioUrl = url;
+		if (url.match(/001\./) && playingBasmala != $currentState.sura && needBasmala($currentIndex)) {
+			audioUrl = getBasmalaUrl($currentState.sura);
+			playingBasmala = $currentState.sura;
+		} else {
+			playingBasmala = 0;
+		}
+
+		audioElement.src = audioUrl;
 		audioElement.load();
-		tick().then(preload);
+		preload();
 	}
 
 	export function current() {
@@ -27,15 +43,17 @@
 
 	export function play() {
 		audioElement.play();
-		// if not using tick, currentIndex is not accurate
-		tick().then(preload);
+		preload();
 	}
 
 	export function pause() {
 		audioElement.pause();
 	}
 
-	export function preload() {
+	async function preload() {
+		// if not using tick, currentIndex is not accurate
+		await tick();
+
 		if ($currentIndex < data.ayaIndex.length - 1) {
 			const nextAya = getAudioUrl($currentIndex + 1);
 			if (preloader1.src != nextAya) {
@@ -64,6 +82,12 @@
 	}
 
 	function onEnded() {
+		if (playingBasmala != 0) {
+			// retrigger play function and return
+			// to prevent nextAya triggered
+			load(getAudioUrl($currentIndex));
+			return play();
+		}
 		dispatch('ended');
 	}
 

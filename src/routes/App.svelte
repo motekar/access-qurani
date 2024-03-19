@@ -146,11 +146,11 @@
 		'right,bottom': actions.prevJuz,
 		'bottom,right': actions.prevJuz,
 
-		'left,top,bottom': actions.firstSura,
-		'left,bottom,top': actions.firstSura,
+		'left,top,bottom': actions.lastSura,
+		'left,bottom,top': actions.lastSura,
 
-		'right,top,bottom': actions.lastSura,
-		'right,bottom,top': actions.lastSura
+		'right,top,bottom': actions.firstSura,
+		'right,bottom,top': actions.firstSura
 	};
 
 	function handleCommand(event: CustomEvent) {
@@ -161,6 +161,7 @@
 	}
 
 	function onKeyup(ev: KeyboardEvent) {
+		// TODO: fix togglePlayer triggered twice when joystick button focused
 		if (ev.code == 'Space') actions.togglePlayer();
 	}
 
