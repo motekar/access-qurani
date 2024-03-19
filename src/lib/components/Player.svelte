@@ -33,8 +33,10 @@
 			playingBasmala = 0;
 		}
 
-		audioElement.src = audioUrl;
-		audioElement.load();
+		if (audioElement.src != audioUrl) {
+			audioElement.src = audioUrl;
+			audioElement.load();
+		}
 		preload();
 	}
 
