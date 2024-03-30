@@ -47,6 +47,9 @@ devDependencies:
   svelte-check:
     specifier: ^3.6.0
     version: 3.6.6(postcss@8.4.35)(svelte@4.2.12)
+  svelte-tiny-slider:
+    specifier: ^1.1.4
+    version: 1.1.4(svelte@4.2.12)
   tslib:
     specifier: ^2.4.1
     version: 2.6.2
@@ -1932,6 +1935,14 @@ packages:
       strip-indent: 3.0.0
       svelte: 4.2.12
       typescript: 5.4.2
+    dev: true
+
+  /svelte-tiny-slider@1.1.4(svelte@4.2.12):
+    resolution: {integrity: sha512-VTW88n73hA5M/gbAPtn0ppd+boucQrZ3W/1/fhy61zwK1U12quG3j3bDtukyARyRu+yebV0c3BeS48U+djh4bw==}
+    peerDependencies:
+      svelte: ^4.0.0
+    dependencies:
+      svelte: 4.2.12
     dev: true
 
   /svelte@4.2.12:

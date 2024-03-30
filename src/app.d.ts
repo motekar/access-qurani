@@ -6,7 +6,7 @@ declare global {
 		// interface Locals {}
 		// interface PageData {}
 		interface PageState {
-			showInfo: boolean
+			mode: string
 		}
 		// interface Platform {}
 	}

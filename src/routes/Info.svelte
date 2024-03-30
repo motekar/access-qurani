@@ -7,19 +7,19 @@
 	let closeButton: HTMLButtonElement;
 
 	function onKeydown(event: KeyboardEvent) {
-		if ($page.state.showInfo && event.key == 'Escape') {
+		if ($page.state.mode == 'info' && event.key == 'Escape') {
 			close();
 		}
 	}
 
-	$: if ($page.state.showInfo) {
+	$: if ($page.state.mode == 'info') {
 		tick().then(() => {
 			if (closeButton) closeButton.focus();
 		});
 	}
 
 	function show() {
-		pushState('', { showInfo: true });
+		pushState('', { mode: 'info' });
 	}
 
 	function close() {
@@ -29,20 +29,20 @@
 
 <svelte:window on:keydown={onKeydown} />
 
-{#if !$page.state.showInfo}
+{#if $page.state.mode != 'info'}
 	<button class="float" on:click={show}>
 		<Icon
 			name="info"
 			title="Informasi dan panduan penggunaan"
 			width="2rem"
 			height="2rem"
-			aria-hidden={$page.state.showInfo}
+			aria-hidden={$page.state.mode == 'info'}
 		/>
 	</button>
 {/if}
 
-{#if $page.state.showInfo}
-	<div class="content" class:show={$page.state.showInfo}>
+{#if $page.state.mode == 'info'}
+	<div class="content" class:show={($page.state.mode = 'info')}>
 		<button bind:this={closeButton} on:click={close}>
 			<Icon name="leftArrow" title="Kembali" width="2rem" height="2rem" />
 		</button>

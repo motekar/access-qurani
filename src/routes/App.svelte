@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Info from './Info.svelte';
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import * as quran from '$lib/quranData';
 	import * as utils from '$lib/utils';
 	import { derived } from 'svelte/store';
@@ -10,6 +10,8 @@
 	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
 	import Player from '$lib/components/Player.svelte';
 	import { base } from '$app/paths';
+	import Welcome from './Welcome.svelte';
+	import { pushState } from '$app/navigation';
 
 	let control: Joystick;
 	let notifier: AriaNotifier;
@@ -176,6 +178,8 @@
 	}
 
 	onMount(() => {
+		tick().then(() => pushState('', { mode: 'welcome' }));
+
 		player.load(quran.getAudioUrl($currentIndex));
 		isInstalled = window.matchMedia('(display-mode: standalone)').matches;
 		pageFlipAudio = new Audio(base + 'audio/pageflip.mp3');
@@ -189,9 +193,11 @@
 
 <svelte:window on:keyup={onKeyup} />
 
+<Welcome />
+
 <Info />
 
-<div aria-hidden={$page.state.showInfo}>
+<div aria-hidden={$page.state.mode != undefined}>
 	<div class="status" aria-hidden="true">
 		Surah {$current.sura}
 		{$current.suraName}.<br />
