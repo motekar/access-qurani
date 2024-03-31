@@ -103,7 +103,7 @@
 	<div class="wrap idle" bind:this={wrap}>
 		<div class="scroller" bind:this={scroller}>
 			<div class="circle">
-				<img src="{base}/img/access-quran.png" width="100" height="100" alt="Logo Akses Qurani" />
+				<slot />
 			</div>
 			<div class="sensor top"></div>
 			<div class="sensor right"></div>

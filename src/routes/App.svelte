@@ -208,7 +208,14 @@
 		Juz {$current.juz}.
 	</div>
 
-	<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer} />
+	<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer}>
+		<img
+			src="{base}/img/access-quran.png"
+			width="100"
+			height="100"
+			alt="Tap untuk memutar atau berhenti. Swipe atas atau bawah untuk pindah ayat. Swipe kanan atau kiri untuk pindah halaman."
+		/>
+	</Joystick>
 </div>
 
 <Player bind:this={player} on:ended={actions.nextAya} />
