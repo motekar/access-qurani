@@ -195,7 +195,9 @@
 
 <Welcome />
 
-<Info />
+{#if $page.state.mode != 'welcome'}
+	<Info />
+{/if}
 
 <div aria-hidden={$page.state.mode != undefined}>
 	<div class="status" aria-hidden="true">
