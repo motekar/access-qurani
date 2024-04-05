@@ -2,6 +2,7 @@
 	import { page } from '$app/stores';
 	import Icon from '$lib/components/Icon.svelte';
 	import { TinySlider } from 'svelte-tiny-slider';
+	import { config } from '$lib/globalState';
 
 	let wrap: HTMLElement;
 
@@ -23,8 +24,8 @@
 		<TinySlider let:sliderWidth>
 			<!-- svelte-ignore a11y-invalid-attribute -->
 			<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
-				<h2>Akses Qurani</h2>
-				<img src="img/access-quran.png" alt="Logo Akses Qurani" />
+				<h2>{$config.name}</h2>
+				<img src="img/access-quran.png" alt={'Logo ' + $config.name} />
 				<p>Tap layar untuk mulai, swipe untuk melihat petunjuk penggunaan.</p>
 				<p>Untuk pengguna screenreader, gunakan dua jari saat melakukan swipe atau tap di layar.</p>
 			</a>

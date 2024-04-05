@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
-	import { createEventDispatcher, onMount } from 'svelte';
+	import { createEventDispatcher, onMount, tick } from 'svelte';
 	import * as utils from '$lib/utils';
 
 	let wrap: HTMLElement;
@@ -88,7 +88,9 @@
 		cmdStack = [];
 	}
 
-	onMount(() => {
+	onMount(async () => {
+		await tick();
+
 		resetScroll();
 
 		initSensors();

@@ -5,7 +5,7 @@
 	import * as utils from '$lib/utils';
 	import { derived } from 'svelte/store';
 	import { page } from '$app/stores';
-	import { currentIndex, current } from '$lib/globalState';
+	import { currentIndex, current, config } from '$lib/globalState';
 	import Joystick from '$lib/components/Joystick.svelte';
 	import AriaNotifier from '$lib/components/AriaNotifier.svelte';
 	import Player from '$lib/components/Player.svelte';
@@ -22,7 +22,8 @@
 
 	const pageTitle = derived(
 		current,
-		($current) => `Surah ${$current.sura} ${$current.suraName} Ayat ${$current.aya} - Akses Qurani`
+		($current) =>
+			`Surah ${$current.sura} ${$current.suraName} Ayat ${$current.aya} - ${$config.name}`
 	);
 
 	// detect page change and play sound effect

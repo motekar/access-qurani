@@ -2,6 +2,7 @@
 	import { pushState } from '$app/navigation';
 	import { page } from '$app/stores';
 	import Icon from '$lib/components/Icon.svelte';
+	import { config } from '$lib/globalState';
 	import { tick } from 'svelte';
 
 	let closeButton: HTMLButtonElement;
@@ -46,7 +47,7 @@
 		<button bind:this={closeButton} on:click={close}>
 			<Icon name="leftArrow" title="Kembali" width="2rem" height="2rem" />
 		</button>
-		<h1>Akses Qurani</h1>
+		<h1>{$config.name}</h1>
 		<h2>Panduan Penggunaan</h2>
 		<h2>Tentang Aplikasi</h2>
 	</div>
