@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { base } from '$app/paths';
 	import { createEventDispatcher, onMount, tick } from 'svelte';
 	import * as utils from '$lib/utils';
 
