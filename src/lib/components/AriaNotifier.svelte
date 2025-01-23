@@ -20,21 +20,16 @@
 		// Clear any existing timeout
 		if (clearTimeout) {
 			window.clearTimeout(clearTimeout);
+			element.textContent = '';
 		}
 
-		// Clear previous message first to ensure new messages are announced
-		element.textContent = '';
+		element.textContent = message;
 
-		// Use requestAnimationFrame to ensure the clear and set are in different frames
-		requestAnimationFrame(() => {
-			element.textContent = message;
-
-			// Set new timeout based on message length
-			const timeout = calculateTimeout(message);
-			clearTimeout = window.setTimeout(() => {
-				element.textContent = '';
-			}, timeout);
-		});
+		// Set new timeout based on message length
+		const timeout = calculateTimeout(message);
+		clearTimeout = window.setTimeout(() => {
+			element.textContent = '';
+		}, timeout);
 	}
 </script>
 
