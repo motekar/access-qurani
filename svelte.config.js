@@ -6,20 +6,7 @@ import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 const config = {
 	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
 	// for more information about preprocessors
-	preprocess: [
-		vitePreprocess(),
-		{
-            name: "strip-svelte-announcer",
-            markup: ({ content: code }) => {
-                return {
-					code: code.replace(
-						/<div id="svelte-announcer" [\s\S]*?<\/div>/,
-						'<svelte:component this={null} />'
-					)
-				}
-            }
-        },
-	],
+	preprocess: vitePreprocess(),
 
 	kit: {
 		// adapter-auto only supports some environments, see https://kit.svelte.dev/docs/adapter-auto for a list.
