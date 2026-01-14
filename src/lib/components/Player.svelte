@@ -106,6 +106,18 @@
 		preloader2.preload = 'auto';
 		preloader3 = new Audio();
 		preloader3.preload = 'auto';
+
+		return () => {
+			preloader1.src = '';
+			preloader2.src = '';
+			preloader3.src = '';
+			audioElement.src = '';
+			audioElement.pause();
+			audioElement.removeEventListener('ended', onEnded);
+			preloader1.removeEventListener('ended', onEnded);
+			preloader2.removeEventListener('ended', onEnded);
+			preloader3.removeEventListener('ended', onEnded);
+		};
 	});
 </script>
 
