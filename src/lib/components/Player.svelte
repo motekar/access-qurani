@@ -134,7 +134,13 @@
 	});
 </script>
 
-<audio preload="auto" bind:this={audioElement} onended={handleEnded} onerror={handleError} bind:currentTime></audio>
+<audio
+	preload="auto"
+	bind:this={audioElement}
+	onended={handleEnded}
+	onerror={handleError}
+	bind:currentTime
+></audio>
 
 <div class="time" aria-hidden="true">{formatTime(currentTime)}</div>
 
