@@ -1,5 +1,7 @@
 <script lang="ts">
-	let element = $state<HTMLElement>();
+	let element1 = $state<HTMLElement>();
+	let element2 = $state<HTMLElement>();
+	let useFirst = $state(true);
 	let timeoutId = $state<number>();
 
 	function calculateTimeout(message: string): number {
@@ -20,20 +22,33 @@
 		// Clear any existing timeout
 		if (timeoutId) {
 			window.clearTimeout(timeoutId);
-			if (element) element.textContent = '';
 		}
 
-		if (element) element.textContent = message;
+		// Double-buffer technique: alternate between two elements
+		// This forces screen readers to interrupt and announce new content immediately
+		const activeElement = useFirst ? element1 : element2;
+		const inactiveElement = useFirst ? element2 : element1;
+
+		// Clear inactive element first
+		if (inactiveElement) inactiveElement.textContent = '';
+
+		// Set message on active element
+		if (activeElement) activeElement.textContent = message;
+
+		// Toggle for next call
+		useFirst = !useFirst;
 
 		// Set new timeout based on message length
 		const timeout = calculateTimeout(message);
 		timeoutId = window.setTimeout(() => {
-			if (element) element.textContent = '';
+			if (element1) element1.textContent = '';
+			if (element2) element2.textContent = '';
 		}, timeout);
 	}
 </script>
 
-<div aria-live="assertive" bind:this={element}></div>
+<div aria-live="assertive" aria-atomic="true" bind:this={element1}></div>
+<div aria-live="assertive" aria-atomic="true" bind:this={element2}></div>
 
 <style>
 	div {
