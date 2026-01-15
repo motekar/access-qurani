@@ -1,0 +1,17 @@
+name = "access-qurani"
+main = ".svelte-kit/cloudflare/_worker.js"
+compatibility_date = "2025-01-15"
+compatibility_flags = ["nodejs_compat"]
+
+# Assets configuration for static files
+[assets]
+directory = ".svelte-kit/cloudflare/assets"
+binding = "ASSETS"
+
+# Uncomment to set custom routes (optional)
+# routes = [
+#   { pattern = "/*", custom_domain = true }
+# ]
+
+[observability]
+enabled = true

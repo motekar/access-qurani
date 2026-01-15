@@ -68,11 +68,62 @@ npm run dev -- --open
 
 ```bash
 # Create production build
-npm run build
+bun run build
 
 # Preview production build
-npm run preview
+bun run preview
 ```
+
+### Deploying to Cloudflare Workers
+
+This project is configured to deploy to Cloudflare Workers using Wrangler.
+
+**Prerequisites:**
+- A Cloudflare account
+- Wrangler CLI (already installed as dev dependency)
+
+**First-time setup:**
+
+```bash
+# Authenticate with Cloudflare
+bun run cf:login
+# This will open your browser to authenticate
+```
+
+**Deployment:**
+
+```bash
+# Deploy to Cloudflare Workers
+bun run deploy
+
+# This will:
+# 1. Build the project
+# 2. Deploy to Cloudflare Workers
+# 3. Output the worker URL
+```
+
+**Local testing with Wrangler:**
+
+```bash
+# Test with Cloudflare Workers runtime locally
+bun run preview:wrangler
+```
+
+**Environment Variables:**
+
+For local development, environment variables are set in `.dev.vars`.
+
+For production, set environment variables in the Cloudflare dashboard:
+1. Go to **Workers & Pages** > **access-qurani** > **Settings** > **Variables**
+2. Add `VITE_AUDIO_SOURCE` with your audio source URL
+3. Click **Save and Deploy**
+
+**Configuration:**
+
+The Worker configuration is in `wrangler.toml`. You can customize:
+- Worker name
+- Custom domains/routes
+- Compatibility settings
 
 ## ⚙️ Configuration
 
