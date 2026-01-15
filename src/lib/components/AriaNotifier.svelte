@@ -19,24 +19,26 @@
 	}
 
 	export function notify(message: string) {
+		console.log('[AriaNotifier] notify called:', message);
+
 		// Clear any existing timeout
 		if (timeoutId) {
 			window.clearTimeout(timeoutId);
 		}
 
-		// Double-buffer technique: alternate between two elements
-		// This forces screen readers to interrupt and announce new content immediately
-		const activeElement = useFirst ? element1 : element2;
-		const inactiveElement = useFirst ? element2 : element1;
+		// Clear both elements first
+		if (element1) element1.textContent = '';
+		if (element2) element2.textContent = '';
 
-		// Clear inactive element first
-		if (inactiveElement) inactiveElement.textContent = '';
+		// Use requestAnimationFrame to ensure DOM update is processed
+		// before setting new content - this helps screen readers detect the change
+		requestAnimationFrame(() => {
+			const activeElement = useFirst ? element1 : element2;
+			if (activeElement) activeElement.textContent = message;
 
-		// Set message on active element
-		if (activeElement) activeElement.textContent = message;
-
-		// Toggle for next call
-		useFirst = !useFirst;
+			// Toggle for next call
+			useFirst = !useFirst;
+		});
 
 		// Set new timeout based on message length
 		const timeout = calculateTimeout(message);

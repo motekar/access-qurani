@@ -201,10 +201,6 @@
 	});
 </script>
 
-<svelte:head>
-	<title>{$pageTitle}</title>
-</svelte:head>
-
 <svelte:window onkeyup={onKeyup} />
 
 {#if $page.state.mode != 'welcome'}
