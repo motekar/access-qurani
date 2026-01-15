@@ -216,26 +216,26 @@
 	<div class="pointer-events-none absolute inset-0 z-10 flex flex-col justify-between p-6">
 		<!-- Top Row -->
 		<div class="flex items-start justify-between">
-			<!-- Top Left: Next Surah -->
+			<!-- Top Left: Prev Juz -->
 			<div class="flex flex-col items-start opacity-50 transition-opacity duration-300">
 				<div class="flex items-center gap-1 text-sm font-medium uppercase tracking-wider text-emerald-400">
 					<ChevronLeft size={16} /> <ChevronUp size={16} />
 				</div>
-				<span class="text-xs text-zinc-400">Next Surah</span>
+				<span class="text-xs text-zinc-400">Prev Juz</span>
 			</div>
 
-			<!-- Top Center: Prev Aya -->
+			<!-- Top Center: Next Aya -->
 			<div class="flex flex-col items-center gap-1 opacity-70 transition-opacity duration-300">
 				<ChevronUp size={32} class="animate-pulse" />
-				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Prev Ayat</span>
+				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Next Ayat</span>
 			</div>
 
-			<!-- Top Right: Prev Surah -->
+			<!-- Top Right: Next Juz -->
 			<div class="flex flex-col items-end opacity-50 transition-opacity duration-300">
 				<div class="flex items-center gap-1 text-sm font-medium uppercase tracking-wider text-emerald-400">
 					<ChevronUp size={16} /> <ChevronRight size={16} />
 				</div>
-				<span class="text-xs text-zinc-400">Prev Surah</span>
+				<span class="text-xs text-zinc-400">Next Juz</span>
 			</div>
 		</div>
 
@@ -255,41 +255,41 @@
 
 		<!-- Middle Row (Arrows Only) -->
 		<div class="flex items-center justify-between mt-auto mb-auto h-full pointer-events-none">
-			<!-- Left: Next Page -->
+			<!-- Left: Prev Page -->
 			<div class="flex flex-col items-start gap-1 opacity-70 transition-opacity duration-300">
 				<ChevronLeft size={32} class="animate-pulse" />
-				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Next Page</span>
+				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Prev Page</span>
 			</div>
 
 			<!-- Center is empty for Joystick -->
 			<div class="flex-1"></div>
 
-			<!-- Right: Prev Page -->
+			<!-- Right: Next Page -->
 			<div class="flex flex-col items-end gap-1 opacity-70 transition-opacity duration-300">
 				<ChevronRight size={32} class="animate-pulse" />
-				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Prev Page</span>
+				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Next Page</span>
 			</div>
 		</div>
 
 		<!-- Bottom Row -->
 		<div class="flex items-end justify-between">
-			<!-- Bottom Left: Next Juz -->
+			<!-- Bottom Left: Prev Surah -->
 			<div class="flex flex-col items-start opacity-50 transition-opacity duration-300">
-				<span class="text-xs text-zinc-400">Next Juz</span>
+				<span class="text-xs text-zinc-400">Prev Surah</span>
 				<div class="flex items-center gap-1 text-sm font-medium uppercase tracking-wider text-emerald-400">
 					<ChevronLeft size={16} /> <ChevronDown size={16} />
 				</div>
 			</div>
 
-			<!-- Bottom Center: Next Aya -->
+			<!-- Bottom Center: Prev Aya -->
 			<div class="flex flex-col items-center gap-1 opacity-70 transition-opacity duration-300">
-				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Next Ayat</span>
+				<span class="text-xs font-bold uppercase tracking-widest text-zinc-400">Prev Ayat</span>
 				<ChevronDown size={32} class="animate-pulse" />
 			</div>
 
-			<!-- Bottom Right: Prev Juz -->
+			<!-- Bottom Right: Next Surah -->
 			<div class="flex flex-col items-end opacity-50 transition-opacity duration-300">
-				<span class="text-xs text-zinc-400">Prev Juz</span>
+				<span class="text-xs text-zinc-400">Next Surah</span>
 				<div class="flex items-center gap-1 text-sm font-medium uppercase tracking-wider text-emerald-400">
 					<ChevronDown size={16} /> <ChevronRight size={16} />
 				</div>
