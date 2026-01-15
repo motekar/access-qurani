@@ -18,15 +18,15 @@
 
 ### Navigation Gestures
 
-| Gesture | Action |
-|---------|--------|
-| **Swipe Left/Right** ⬅️ ➡️ | Navigate between pages |
-| **Swipe Up/Down** ⬆️ ⬇️ | Navigate between ayat (verses) |
-| **Swipe Left+Up / Right+Up** ↖️ ↗️ | Navigate between juz |
-| **Swipe Left+Down / Right+Down** ↙️ ↘️ | Navigate between surahs |
-| **Tap Center** 👆 | Play/Pause audio |
-| **Space Key** ⌨️ | Play/Pause audio |
-| **Arrow Keys** ⌨️ | Navigate (keyboard alternative) |
+| Gesture                                | Action                          |
+| -------------------------------------- | ------------------------------- |
+| **Swipe Left/Right** ⬅️ ➡️             | Navigate between pages          |
+| **Swipe Up/Down** ⬆️ ⬇️                | Navigate between ayat (verses)  |
+| **Swipe Left+Up / Right+Up** ↖️ ↗️     | Navigate between juz            |
+| **Swipe Left+Down / Right+Down** ↙️ ↘️ | Navigate between surahs         |
+| **Tap Center** 👆                      | Play/Pause audio                |
+| **Space Key** ⌨️                       | Play/Pause audio                |
+| **Arrow Keys** ⌨️                      | Navigate (keyboard alternative) |
 
 ### For Screen Reader Users
 
@@ -79,6 +79,7 @@ bun run preview
 This project is configured to deploy to Cloudflare Workers using Wrangler.
 
 **Prerequisites:**
+
 - A Cloudflare account
 - Wrangler CLI (already installed as dev dependency)
 
@@ -114,6 +115,7 @@ bun run preview:wrangler
 For local development, environment variables are set in `.dev.vars`.
 
 For production, set environment variables in the Cloudflare dashboard:
+
 1. Go to **Workers & Pages** > **access-qurani** > **Settings** > **Variables**
 2. Add `VITE_AUDIO_SOURCE` with your audio source URL
 3. Click **Save and Deploy**
@@ -121,6 +123,7 @@ For production, set environment variables in the Cloudflare dashboard:
 **Configuration:**
 
 The Worker configuration is in `wrangler.toml`. You can customize:
+
 - Worker name
 - Custom domains/routes
 - Compatibility settings
@@ -140,6 +143,7 @@ VITE_AUDIO_SOURCE=https://tanzil.net/res/audio/afasy
 ```
 
 **Available Sources:**
+
 - `https://tanzil.net/res/audio/afasy` (Default - Sheikh Mishary Alafasy)
 - `https://everyayah.com/data/Maher_AlMuaiqly_64kbps` (Sheikh Maher Al-Muaiqly)
 
@@ -176,12 +180,14 @@ src/
 ## 🌐 Audio Sources
 
 Audio recitations are provided by:
+
 - **[Tanzil.net](https://tanzil.net/)** - Quran metadata and audio
 - **[EveryAyah.com](https://everyayah.com/)** - Alternative audio source
 
 ## 📝 License
 
 This project uses the following resources:
+
 - Quran text and metadata from [Tanzil.net](https://tanzil.net/)
 - Audio recitations from licensed reciters
 

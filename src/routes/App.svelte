@@ -229,5 +229,6 @@
 		top: 20%;
 		z-index: 999;
 		font-size: larger;
+		pointer-events: none;
 	}
 </style>
