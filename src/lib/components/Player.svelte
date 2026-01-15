@@ -13,10 +13,12 @@
 
 	let {
 		currentTime = $bindable(0),
-		onended
+		onended,
+		onerror
 	}: {
 		currentTime?: number;
 		onended?: () => void;
+		onerror?: (error: Event) => void;
 	} = $props();
 
 	let audioElement = $state<HTMLAudioElement>();
@@ -106,6 +108,12 @@
 		onended?.();
 	}
 
+	function handleError(e: Event) {
+		console.error('Audio playback error:', e);
+		isPlaying = false;
+		onerror?.(e);
+	}
+
 	onMount(() => {
 		preloader1 = new Audio();
 		preloader1.preload = 'auto';
@@ -126,7 +134,7 @@
 	});
 </script>
 
-<audio preload="auto" bind:this={audioElement} onended={handleEnded} bind:currentTime></audio>
+<audio preload="auto" bind:this={audioElement} onended={handleEnded} onerror={handleError} bind:currentTime></audio>
 
 <div class="time" aria-hidden="true">{formatTime(currentTime)}</div>
 
@@ -135,10 +143,8 @@
 		position: fixed;
 		left: 50%;
 		transform: translateX(-50%);
-		top: 20%;
-		z-index: 999;
-		font-size: larger;
 		top: calc(50% + 100px);
+		z-index: 999;
 		font-size: 20px;
 	}
 </style>

@@ -1,6 +1,7 @@
 import { derived, readable, type Writable } from 'svelte/store';
 import { localStore } from './localStore';
 import { data, getJuzFromIndex, getPageFromIndex, getSuraData, getAudioUrl } from '$lib/quranData';
+import { appConfig } from '$lib/config';
 
 export const currentIndex: Writable<number> = localStore('index', 0);
 
@@ -16,6 +17,4 @@ export const current = derived(currentIndex, ($currentIndex) => {
 	};
 });
 
-export const config = readable({
-	name: 'Qurani Player'
-});
+export const config = readable(appConfig);
