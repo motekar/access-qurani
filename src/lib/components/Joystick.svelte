@@ -157,7 +157,7 @@
 	.wrap {
 		width: 100vw;
 		height: 100vh;
-		background-color: #ddd;
+		background-color: transparent;
 		position: relative;
 		overflow: hidden;
 		touch-action: none;
@@ -173,35 +173,27 @@
 	}
 
 	.circle {
-		width: 100px;
-		height: 100px;
-		background-color: #607c3c;
+		width: auto;
+		height: auto;
+		background-color: transparent;
 		color: #fff;
-		font-size: 30px;
-		font-weight: bold;
 		border-radius: 50%;
-		text-align: center;
-		line-height: 100px;
 		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		overflow: hidden;
+		overflow: visible;
 		pointer-events: none;
 		z-index: 10;
 	}
 
-	.idle .circle {
-		background-color: #f00;
-	}
-
 	:global(.front) {
-		opacity: 1 !important;
+		opacity: 0 !important;
+		display: none !important;
 	}
 
 	:global(.back) {
-		opacity: 0.3 !important;
-		border: 2px solid #607c3c !important;
-		background: transparent !important;
+		opacity: 0 !important;
+		display: none !important;
 	}
 </style>
