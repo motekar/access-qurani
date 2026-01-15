@@ -1,6 +1,6 @@
 {
-	"name": "Qurani Player",
-	"short_name": "Qurani Player",
+	"name": "Akses Qurani",
+	"short_name": "Akses Qurani",
 	"start_url": "/",
 	"display": "standalone",
 	"theme_color": "#00ff00",
