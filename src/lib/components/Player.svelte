@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount, tick } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import {
 		data,
 		getAudioUrl,
@@ -11,18 +11,23 @@
 	import { formatTime } from '$lib/utils';
 	import { currentIndex, current as currentState } from '$lib/globalState';
 
-	export let currentTime: number = 0;
+	let {
+		currentTime = $bindable(0),
+		onended
+	}: {
+		currentTime?: number;
+		onended?: () => void;
+	} = $props();
 
-	const dispatch = createEventDispatcher();
-
-	let audioElement: HTMLAudioElement;
-	let preloader1: HTMLAudioElement;
-	let preloader2: HTMLAudioElement;
-	let preloader3: HTMLAudioElement;
-	let playingBasmala: number = 0;
-	let isPlaying: boolean = false;
+	let audioElement = $state<HTMLAudioElement>();
+	let preloader1 = $state<HTMLAudioElement>();
+	let preloader2 = $state<HTMLAudioElement>();
+	let preloader3 = $state<HTMLAudioElement>();
+	let playingBasmala = $state(0);
+	let isPlaying = $state(false);
 
 	export function load(url: string) {
+		if (!audioElement) return;
 		let audioUrl = url;
 		// Fix first time play on first aya
 		if (!isPlaying) playingBasmala = 0;
@@ -42,18 +47,20 @@
 
 	export function current() {
 		return {
-			url: audioElement.src,
+			url: audioElement?.src || '',
 			time: currentTime
 		};
 	}
 
 	export function play() {
+		if (!audioElement) return;
 		audioElement.play();
 		isPlaying = true;
 		preload();
 	}
 
 	export function pause() {
+		if (!audioElement) return;
 		audioElement.pause();
 		isPlaying = false;
 	}
@@ -62,7 +69,7 @@
 		// if not using tick, currentIndex is not accurate
 		await tick();
 
-		if ($currentIndex < data.ayaIndex.length - 1) {
+		if ($currentIndex < data.ayaIndex.length - 1 && preloader1) {
 			const nextAya = getAudioUrl($currentIndex + 1);
 			if (preloader1.src != nextAya) {
 				preloader1.src = nextAya;
@@ -71,7 +78,7 @@
 		}
 
 		// preload next page
-		if ($currentState.page < 604) {
+		if ($currentState.page < 604 && preloader2) {
 			const nextPageAya = getAudioUrl(getAyaIndexFromPage($currentState.page + 1));
 			if (preloader2.src != nextPageAya) {
 				preloader2.src = nextPageAya;
@@ -80,7 +87,7 @@
 		}
 
 		// preload next sura
-		if ($currentState.sura < 114) {
+		if ($currentState.sura < 114 && preloader3) {
 			const nextSuraAya = getAudioUrl(getAyaIndexFromSura($currentState.sura + 1));
 			if (preloader3.src != nextSuraAya) {
 				preloader3.src = nextSuraAya;
@@ -89,14 +96,14 @@
 		}
 	}
 
-	function onEnded() {
+	function handleEnded() {
 		if (playingBasmala != 0) {
 			// retrigger play function and return
 			// to prevent nextAya triggered
 			load(getAudioUrl($currentIndex));
 			return play();
 		}
-		dispatch('ended');
+		onended?.();
 	}
 
 	onMount(() => {
@@ -108,20 +115,18 @@
 		preloader3.preload = 'auto';
 
 		return () => {
-			preloader1.src = '';
-			preloader2.src = '';
-			preloader3.src = '';
-			audioElement.src = '';
-			audioElement.pause();
-			audioElement.removeEventListener('ended', onEnded);
-			preloader1.removeEventListener('ended', onEnded);
-			preloader2.removeEventListener('ended', onEnded);
-			preloader3.removeEventListener('ended', onEnded);
+			if (preloader1) preloader1.src = '';
+			if (preloader2) preloader2.src = '';
+			if (preloader3) preloader3.src = '';
+			if (audioElement) {
+				audioElement.src = '';
+				audioElement.pause();
+			}
 		};
 	});
 </script>
 
-<audio preload="auto" bind:this={audioElement} on:ended={onEnded} bind:currentTime></audio>
+<audio preload="auto" bind:this={audioElement} onended={handleEnded} bind:currentTime></audio>
 
 <div class="time" aria-hidden="true">{formatTime(currentTime)}</div>
 

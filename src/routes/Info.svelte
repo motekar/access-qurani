@@ -5,7 +5,7 @@
 	import { config } from '$lib/globalState';
 	import { tick } from 'svelte';
 
-	let closeButton: HTMLButtonElement;
+	let closeButton = $state<HTMLButtonElement>();
 
 	function onKeydown(event: KeyboardEvent) {
 		if ($page.state.mode == 'info' && event.key == 'Escape') {
@@ -13,11 +13,13 @@
 		}
 	}
 
-	$: if ($page.state.mode == 'info') {
-		tick().then(() => {
-			if (closeButton) closeButton.focus();
-		});
-	}
+	$effect(() => {
+		if ($page.state.mode == 'info') {
+			tick().then(() => {
+				if (closeButton) closeButton.focus();
+			});
+		}
+	});
 
 	function show() {
 		pushState('', { mode: 'info' });
@@ -28,10 +30,10 @@
 	}
 </script>
 
-<svelte:window on:keydown={onKeydown} />
+<svelte:window onkeydown={onKeydown} />
 
 {#if $page.state.mode != 'info'}
-	<button class="float" on:click={show}>
+	<button class="float" onclick={show}>
 		<Icon
 			name="info"
 			title="Informasi dan panduan penggunaan"
@@ -43,8 +45,8 @@
 {/if}
 
 {#if $page.state.mode == 'info'}
-	<div class="content" class:show={($page.state.mode = 'info')}>
-		<button bind:this={closeButton} on:click={close}>
+	<div class="content" class:show={$page.state.mode == 'info'}>
+		<button bind:this={closeButton} onclick={close}>
 			<Icon name="leftArrow" title="Kembali" width="2rem" height="2rem" />
 		</button>
 		<h1>{$config.name}</h1>

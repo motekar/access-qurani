@@ -1,34 +1,44 @@
 <script lang="ts">
-	import { createEventDispatcher, onMount, tick } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import * as utils from '$lib/utils';
 
-	let wrap: HTMLElement;
-	let scroller: HTMLElement;
-	let cmdStack: string[] = [];
-	let beep: HTMLAudioElement;
+	let {
+		onclick,
+		ontouchend,
+		children
+	}: {
+		onclick?: () => void;
+		ontouchend?: (detail: string[]) => void;
+		children?: any;
+	} = $props();
+
+	let wrap = $state<HTMLElement>();
+	let scroller = $state<HTMLElement>();
+	let cmdStack = $state<string[]>([]);
+	let beep = $state<HTMLAudioElement>();
 
 	export function addClass(className: string) {
-		wrap.classList.add(className);
+		if (wrap) wrap.classList.add(className);
 	}
 
 	export function removeClass(className: string) {
-		wrap.classList.remove(className);
+		if (wrap) wrap.classList.remove(className);
 	}
 
-	const dispatch = createEventDispatcher();
-
 	function resetScroll() {
+		if (!wrap || !scroller) return;
 		wrap.style.overflow = 'hidden';
 
 		wrap.scrollLeft = (scroller.offsetWidth - wrap.offsetWidth) / 2;
 		wrap.scrollTop = (scroller.offsetHeight - wrap.offsetHeight) / 2;
 
 		setTimeout(() => {
-			wrap.style.overflow = 'scroll';
+			if (wrap) wrap.style.overflow = 'scroll';
 		}, 100);
 	}
 
 	function initSensors() {
+		if (!wrap || !scroller) return;
 		scroller.style.transform = 'initial';
 		scroller.style.top = 'initial';
 		scroller.style.left = 'initial';
@@ -53,16 +63,16 @@
 
 		// Generate string command based on visible sensors
 		cmdStack.push(visibleSensors.join(','));
-		beep.play();
+		if (beep) beep.play();
 	}
 
-	function onClick() {
-		dispatch('click');
+	function handleClick() {
+		onclick?.();
 	}
 
-	function onTouchEnd() {
+	function handleTouchEnd() {
 		resetScroll();
-		dispatch('touchend', cmdStack);
+		ontouchend?.(cmdStack);
 		cmdStack = [];
 	}
 
@@ -77,13 +87,15 @@
 		if (keyCommand) {
 			ev.preventDefault();
 			cmdStack.push(keyCommand);
-			beep.currentTime = 0;
-			beep.play();
+			if (beep) {
+				beep.currentTime = 0;
+				beep.play();
+			}
 		}
 	}
 
 	function onKeyup() {
-		dispatch('touchend', cmdStack);
+		ontouchend?.(cmdStack);
 		cmdStack = [];
 	}
 
@@ -98,13 +110,13 @@
 	});
 </script>
 
-<svelte:window on:keydown={onKeydown} on:keyup={onKeyup} />
+<svelte:window onkeydown={onKeydown} onkeyup={onKeyup} />
 
-<button on:touchend={onTouchEnd} on:click={onClick}>
+<button ontouchend={handleTouchEnd} onclick={handleClick}>
 	<div class="wrap idle" bind:this={wrap}>
 		<div class="scroller" bind:this={scroller}>
 			<div class="circle">
-				<slot />
+				{@render children?.()}
 			</div>
 			<div class="sensor top"></div>
 			<div class="sensor right"></div>

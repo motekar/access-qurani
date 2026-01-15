@@ -1,6 +1,6 @@
 <script lang="ts">
-	let element: HTMLElement;
-	let clearTimeout: number;
+	let element = $state<HTMLElement>();
+	let timeoutId = $state<number>();
 
 	function calculateTimeout(message: string): number {
 		// Average reading speed: ~150 words per minute
@@ -18,25 +18,22 @@
 
 	export function notify(message: string) {
 		// Clear any existing timeout
-		if (clearTimeout) {
-			window.clearTimeout(clearTimeout);
-			element.textContent = '';
+		if (timeoutId) {
+			window.clearTimeout(timeoutId);
+			if (element) element.textContent = '';
 		}
 
-		element.textContent = message;
+		if (element) element.textContent = message;
 
 		// Set new timeout based on message length
 		const timeout = calculateTimeout(message);
-		clearTimeout = window.setTimeout(() => {
-			element.textContent = '';
+		timeoutId = window.setTimeout(() => {
+			if (element) element.textContent = '';
 		}, timeout);
 	}
 </script>
 
-<div
-	aria-live="assertive"
-	bind:this={element}
-></div>
+<div aria-live="assertive" bind:this={element}></div>
 
 <style>
 	div {

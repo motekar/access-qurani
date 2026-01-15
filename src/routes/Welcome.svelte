@@ -4,15 +4,17 @@
 	import { TinySlider } from 'svelte-tiny-slider';
 	import { config } from '$lib/globalState';
 
-	let wrap: HTMLElement;
+	let wrap = $state<HTMLElement>();
 
-	$: if (wrap) {
-		if ($page.state.mode == 'welcome') {
-			wrap.classList.remove('close');
-		} else {
-			wrap.classList.add('close');
+	$effect(() => {
+		if (wrap) {
+			if ($page.state.mode == 'welcome') {
+				wrap.classList.remove('close');
+			} else {
+				wrap.classList.add('close');
+			}
 		}
-	}
+	});
 
 	function close() {
 		history.back();
@@ -23,8 +25,8 @@
 	<div class="container">
 		<TinySlider>
 			{#snippet children({ sliderWidth })}
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
+				<!-- svelte-ignore a11y_invalid_attribute -->
+				<a href="#" class="item" onclick={close} style="width: {sliderWidth}px;">
 					<h2>{$config.name}</h2>
 					<img src="img/access-quran.png" alt={'Logo ' + $config.name} />
 					<p>Tap layar untuk mulai, swipe untuk melihat petunjuk penggunaan.</p>
@@ -33,8 +35,8 @@
 					</p>
 				</a>
 
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
+				<!-- svelte-ignore a11y_invalid_attribute -->
+				<a href="#" class="item" onclick={close} style="width: {sliderWidth}px;">
 					<h2>Pindah Halaman</h2>
 					<Icon
 						aria-hidden="true"
@@ -47,8 +49,8 @@
 					<p>Aplikasi ini menggunakan standar halaman Mushaf Madinah.</p>
 				</a>
 
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
+				<!-- svelte-ignore a11y_invalid_attribute -->
+				<a href="#" class="item" onclick={close} style="width: {sliderWidth}px;">
 					<h2>Pindah Ayat</h2>
 					<Icon
 						aria-hidden="true"
@@ -60,8 +62,8 @@
 					<p>Swipe ke atas atau bawah untuk berpindah ayat.</p>
 				</a>
 
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
+				<!-- svelte-ignore a11y_invalid_attribute -->
+				<a href="#" class="item" onclick={close} style="width: {sliderWidth}px;">
 					<h2>Pindah Surah</h2>
 					<Icon
 						aria-hidden="true"
@@ -73,8 +75,8 @@
 					<p>Swipe ke <code>kanan+bawah</code> atau kiri+bawah untuk berpindah surah.</p>
 				</a>
 
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
+				<!-- svelte-ignore a11y_invalid_attribute -->
+				<a href="#" class="item" onclick={close} style="width: {sliderWidth}px;">
 					<h2>Pindah Juz</h2>
 					<Icon
 						aria-hidden="true"
@@ -86,8 +88,8 @@
 					<p>Swipe ke kanan+atas atau kiri+atas untuk berpindah juz.</p>
 				</a>
 
-				<!-- svelte-ignore a11y-invalid-attribute -->
-				<a href="#" class="item" on:click={close} style="width: {sliderWidth}px;">
+				<!-- svelte-ignore a11y_invalid_attribute -->
+				<a href="#" class="item" onclick={close} style="width: {sliderWidth}px;">
 					<button>Mulai</button>
 				</a>
 			{/snippet}

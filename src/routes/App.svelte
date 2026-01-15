@@ -13,12 +13,12 @@
 	import Welcome from './Welcome.svelte';
 	import { pushState } from '$app/navigation';
 
-	let control: Joystick;
-	let notifier: AriaNotifier;
-	let player: Player;
-	let isInstalled: boolean;
-	let pageFlipAudio: HTMLAudioElement;
-	let pageFlipAudio2: HTMLAudioElement;
+	let control = $state<Joystick>();
+	let notifier = $state<AriaNotifier>();
+	let player = $state<Player>();
+	let isInstalled = $state(false);
+	let pageFlipAudio = $state<HTMLAudioElement>();
+	let pageFlipAudio2 = $state<HTMLAudioElement>();
 
 	const pageTitle = derived(
 		current,
@@ -27,39 +27,40 @@
 	);
 
 	// detect page change and play sound effect
-	let lastPage: number = 1;
-	$: if ($current.page != lastPage) {
-		if (pageFlipAudio) playPageFlipSound(Math.abs($current.page - lastPage) > 1);
-		lastPage = $current.page;
-	}
+	let lastPage = $state(1);
+	$effect(() => {
+		if ($current.page != lastPage) {
+			if (pageFlipAudio) playPageFlipSound(Math.abs($current.page - lastPage) > 1);
+			lastPage = $current.page;
+		}
+	});
 
-	let isPlaying: boolean = false;
+	let isPlaying = $state(false);
 
-	// This reactive statement will triggered on change to
-	// isPlaying and currentIndex
-	$: {
-		if (isPlaying) {
+	// This effect will trigger on change to isPlaying and currentIndex
+	$effect(() => {
+		if (isPlaying && player) {
 			if (player.current().url != $current.url) {
 				player.load($current.url);
 			}
 			player.play();
 
-			control.removeClass('idle');
+			if (control) control.removeClass('idle');
 		} else {
-			player && player.pause();
-			control && control.addClass('idle');
+			if (player) player.pause();
+			if (control) control.addClass('idle');
 		}
-	}
+	});
 
 	function ariaNotify(message: string) {
 		if (isPlaying) return;
-		notifier.notify(message);
+		if (notifier) notifier.notify(message);
 	}
 
 	const actions = {
 		togglePlayer() {
 			// Just change the state, player will play or pause
-			// on reactive statement above
+			// on effect above
 			isPlaying = !isPlaying;
 
 			if (isPlaying) utils.requestWakeLock();
@@ -156,9 +157,8 @@
 		'right,bottom,top': actions.firstSura
 	};
 
-	function handleCommand(event: CustomEvent) {
-		const command = event.detail as string[];
-		const commandStr = command.join(',');
+	function handleCommand(commands: string[]) {
+		const commandStr = commands.join(',');
 		const action = commandActions[commandStr as keyof typeof commandActions];
 		if (action) action();
 	}
@@ -169,10 +169,10 @@
 	}
 
 	function playPageFlipSound(multi: boolean) {
-		if (!multi) {
+		if (!multi && pageFlipAudio) {
 			pageFlipAudio.currentTime = 0;
 			pageFlipAudio.play();
-		} else {
+		} else if (pageFlipAudio2) {
 			pageFlipAudio2.currentTime = 0;
 			pageFlipAudio2.play();
 		}
@@ -181,7 +181,7 @@
 	onMount(() => {
 		tick().then(() => pushState('', { mode: 'welcome' }));
 
-		player.load(quran.getAudioUrl($currentIndex));
+		if (player) player.load(quran.getAudioUrl($currentIndex));
 		isInstalled = window.matchMedia('(display-mode: standalone)').matches;
 		pageFlipAudio = new Audio(base + 'audio/pageflip.mp3');
 		pageFlipAudio2 = new Audio(base + 'audio/pageflip-multi.mp3');
@@ -192,7 +192,7 @@
 	<title>{$pageTitle}</title>
 </svelte:head>
 
-<svelte:window on:keyup={onKeyup} />
+<svelte:window onkeyup={onKeyup} />
 
 <Welcome />
 
@@ -209,7 +209,7 @@
 		Juz {$current.juz}.
 	</div>
 
-	<Joystick bind:this={control} on:touchend={handleCommand} on:click={actions.togglePlayer}>
+	<Joystick bind:this={control} ontouchend={handleCommand} onclick={actions.togglePlayer}>
 		<img
 			src="{base}/img/access-quran.png"
 			width="100"
@@ -219,7 +219,7 @@
 	</Joystick>
 </div>
 
-<Player bind:this={player} on:ended={actions.nextAya} />
+<Player bind:this={player} onended={actions.nextAya} />
 
 <AriaNotifier bind:this={notifier} />
 
