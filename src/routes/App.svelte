@@ -194,8 +194,6 @@
 
 <svelte:window onkeyup={onKeyup} />
 
-<Welcome />
-
 {#if $page.state.mode != 'welcome'}
 	<Info />
 {/if}
