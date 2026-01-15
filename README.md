@@ -1,38 +1,149 @@
-# create-svelte
+# Access Qurani 🕌
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+**Accessible Quran Audio Player** - A Progressive Web App (PWA) designed for accessibility, featuring gesture-based navigation and audio playback of Quranic recitations.
 
-## Creating a project
+[![Built with SvelteKit](https://img.shields.io/badge/Built%20with-SvelteKit%205-FF3E00?logo=svelte)](https://kit.svelte.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## ✨ Features
+
+- **🎯 Gesture-Based Navigation** - Intuitive swipe controls for navigating Quran
+- **♿ Accessibility First** - Full screen reader support with ARIA notifications
+- **📱 Progressive Web App** - Install and use offline
+- **🔊 Audio Playback** - High-quality Quran recitations by Sheikh Mishary Rashid Alafasy
+- **📖 Mushaf Madinah Standard** - Follows standard Mushaf Madinah page numbering (604 pages)
+- **🌙 Wake Lock Support** - Screen stays on during playback
+
+## 🎮 How to Use
+
+### Navigation Gestures
+
+| Gesture | Action |
+|---------|--------|
+| **Swipe Left/Right** ⬅️ ➡️ | Navigate between pages |
+| **Swipe Up/Down** ⬆️ ⬇️ | Navigate between ayat (verses) |
+| **Swipe Left+Up / Right+Up** ↖️ ↗️ | Navigate between juz |
+| **Swipe Left+Down / Right+Down** ↙️ ↘️ | Navigate between surahs |
+| **Tap Center** 👆 | Play/Pause audio |
+| **Space Key** ⌨️ | Play/Pause audio |
+| **Arrow Keys** ⌨️ | Navigate (keyboard alternative) |
+
+### For Screen Reader Users
+
+Use **two-finger gestures** when performing swipes or taps. The app will announce the current position (surah, ayat, page, juz) after navigation.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+ or Bun
+- npm, pnpm, or bun
+
+### Installation
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+# Clone the repository
+git clone https://github.com/yourusername/access-qurani.git
+cd access-qurani
 
-# create a new project in my-app
-npm create svelte@latest my-app
+# Install dependencies
+npm install
+# or
+pnpm install
+# or
+bun install
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+### Development
 
 ```bash
+# Start development server
 npm run dev
 
-# or start the server and open the app in a new browser tab
+# Open in browser
 npm run dev -- --open
 ```
 
-## Building
-
-To create a production version of your app:
+### Building for Production
 
 ```bash
+# Create production build
 npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can preview the production build with `npm run preview`.
+## ⚙️ Configuration
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+### Audio Source
+
+You can configure the audio source by setting the `VITE_AUDIO_SOURCE` environment variable:
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit .env and set your preferred audio source
+VITE_AUDIO_SOURCE=https://tanzil.net/res/audio/afasy
+```
+
+**Available Sources:**
+- `https://tanzil.net/res/audio/afasy` (Default - Sheikh Mishary Alafasy)
+- `https://everyayah.com/data/Maher_AlMuaiqly_64kbps` (Sheikh Maher Al-Muaiqly)
+
+## 📁 Project Structure
+
+```
+src/
+├── lib/
+│   ├── components/
+│   │   ├── AriaNotifier.svelte  # Accessibility announcements
+│   │   ├── Joystick.svelte      # Gesture control component
+│   │   ├── Player.svelte        # Audio player
+│   │   └── Icon.svelte          # Icon component
+│   ├── config.ts                # App configuration
+│   ├── globalState.ts           # Svelte stores
+│   ├── localStore.ts            # LocalStorage wrapper
+│   ├── quranData.ts             # Quran metadata (pages, surahs, etc.)
+│   └── utils.ts                 # Utility functions
+├── routes/
+│   ├── App.svelte               # Main app component
+│   ├── Welcome.svelte           # Onboarding screen
+│   └── Info.svelte              # Info modal
+└── service-worker/
+    └── index.ts                 # Service worker (PWA)
+```
+
+## 🛠️ Technology Stack
+
+- **[SvelteKit 5](https://kit.svelte.dev/)** - Web framework with Svelte 5 runes
+- **[TypeScript](https://www.typescriptlang.org/)** - Type safety
+- **[Vite](https://vitejs.dev/)** - Build tool
+- **PWA** - Progressive Web App capabilities
+
+## 🌐 Audio Sources
+
+Audio recitations are provided by:
+- **[Tanzil.net](https://tanzil.net/)** - Quran metadata and audio
+- **[EveryAyah.com](https://everyayah.com/)** - Alternative audio source
+
+## 📝 License
+
+This project uses the following resources:
+- Quran text and metadata from [Tanzil.net](https://tanzil.net/)
+- Audio recitations from licensed reciters
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 🐛 Issues
+
+Found a bug? Please [open an issue](https://github.com/yourusername/access-qurani/issues).
+
+## 🙏 Credits
+
+- Quran recitation by Sheikh Mishary Rashid Alafasy
+- Mushaf Madinah page numbering standard
+- Built with ❤️ for accessibility
