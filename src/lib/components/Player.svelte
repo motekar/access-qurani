@@ -27,15 +27,28 @@
 	let preloader3 = $state<HTMLAudioElement>();
 	let playingBasmala = $state(0);
 	let isPlaying = $state(false);
+	let intendedUrl = $state('');
 
 	export function load(url: string) {
 		if (!audioElement) return;
 		let audioUrl = url;
-		// Fix first time play on first aya
-		if (!isPlaying) playingBasmala = 0;
-		if (url.match(/001\./) && playingBasmala != $currentState.sura && needBasmala($currentIndex)) {
-			audioUrl = getBasmalaUrl($currentState.sura);
-			playingBasmala = $currentState.sura;
+		intendedUrl = url;
+
+		// Parse sura and aya from URL (format: SSSAAA.mp3)
+		const match = url.match(/(\d{3})(\d{3})\.mp3$/);
+		if (match) {
+			const sura = parseInt(match[1], 10);
+			const aya = parseInt(match[2], 10);
+
+			// Check if this is first aya and needs basmala
+			// sura 1 (Al-Fatihah) and sura 9 (At-Taubah) don't need basmala
+			// playingBasmala tracks which sura's basmala we're currently playing
+			if (aya === 1 && sura !== 1 && sura !== 9 && playingBasmala !== sura) {
+				audioUrl = getBasmalaUrl(sura);
+				playingBasmala = sura;
+			} else {
+				playingBasmala = 0;
+			}
 		} else {
 			playingBasmala = 0;
 		}
@@ -49,7 +62,7 @@
 
 	export function current() {
 		return {
-			url: audioElement?.src || '',
+			url: intendedUrl,
 			time: currentTime
 		};
 	}
